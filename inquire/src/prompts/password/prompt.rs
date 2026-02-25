@@ -57,7 +57,7 @@ impl<'a> From<Password<'a>> for PasswordPrompt<'a> {
             confirmation_stage: false,
             formatter: so.formatter,
             validators: so.validators,
-            input: Input::new(),
+            input: Input::new_with(so.initial_value.unwrap_or_default()),
             error: None,
         }
     }
