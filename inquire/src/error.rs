@@ -32,6 +32,9 @@ pub enum InquireError {
     /// pressing Ctrl+C will trigger SIGINT.
     OperationInterrupted,
 
+    /// The user requested contextual help via the configured help hotkey.
+    OperationHelp,
+
     /// Error while executing IO operations.
     Custom(CustomUserError),
 }
@@ -83,6 +86,9 @@ impl fmt::Display for InquireError {
             InquireError::OperationCanceled => f.write_str("Operation was canceled by the user"),
             InquireError::OperationInterrupted => {
                 f.write_str("Operation was interrupted by the user")
+            }
+            InquireError::OperationHelp => {
+                f.write_str("Operation help was requested by the user")
             }
             InquireError::Custom(err) => write!(f, "User-provided error: {}", err),
         }

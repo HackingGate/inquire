@@ -15,6 +15,15 @@ use dyn_clone::DynClone;
 
 use crate::CustomUserError;
 
+// Describes which keybinding triggered an autocomplete completion request.
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum CompletionTrigger {
+    // Standard completion trigger (Tab).
+    Tab,
+    // Help completion trigger (project-defined hotkey).
+    Help,
+}
+
 /// Used when an autocompletion is triggered for the user's text input.
 ///
 /// `None` means that no completion will be made.
@@ -55,6 +64,20 @@ pub trait Autocomplete: DynClone {
         input: &str,
         highlighted_suggestion: Option<String>,
     ) -> Result<Replacement, CustomUserError>;
+
+    // Completion entrypoint that receives the triggering key semantic.
+    //
+    // Default behavior preserves backwards compatibility by delegating to
+    // `get_completion` and ignoring `trigger`.
+    fn get_completion_with_trigger(
+        &mut self,
+        input: &str,
+        highlighted_suggestion: Option<String>,
+        trigger: CompletionTrigger,
+    ) -> Result<Replacement, CustomUserError> {
+        let _ = trigger;
+        self.get_completion(input, highlighted_suggestion)
+    }
 }
 
 impl Clone for Box<dyn Autocomplete> {

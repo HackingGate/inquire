@@ -1,7 +1,7 @@
 use std::cmp::min;
 
 use crate::{
-    autocompletion::{NoAutoCompletion, Replacement},
+    autocompletion::{CompletionTrigger, NoAutoCompletion, Replacement},
     error::InquireResult,
     formatter::StringFormatter,
     input::{Input, InputActionResult},
@@ -117,11 +117,14 @@ impl<'a, 'b> TextPrompt<'a, 'b> {
         }
     }
 
-    fn use_current_suggestion(&mut self) -> InquireResult<ActionResult> {
+    fn use_current_suggestion(
+        &mut self,
+        trigger: CompletionTrigger,
+    ) -> InquireResult<ActionResult> {
         let suggestion = self.get_highlighted_suggestion().map(|s| s.to_owned());
         match self
             .autocompleter
-            .get_completion(self.input.content(), suggestion)?
+            .get_completion_with_trigger(self.input.content(), suggestion, trigger)?
         {
             Replacement::Some(value) => {
                 self.input = Input::new_with(value);
@@ -215,7 +218,7 @@ where
                 self.move_cursor_down(self.config.page_size)
             }
             TextPromptAction::UseCurrentSuggestion => {
-                let result = self.use_current_suggestion()?;
+                let result = self.use_current_suggestion(CompletionTrigger::Tab)?;
 
                 if let ActionResult::NeedsRedraw = result {
                     self.update_suggestions()?;
@@ -223,6 +226,7 @@ where
 
                 result
             }
+            TextPromptAction::ShowHelp => return Err(InquireError::OperationHelp),
         };
 
         Ok(result)

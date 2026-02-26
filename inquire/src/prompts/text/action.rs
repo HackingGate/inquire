@@ -19,8 +19,10 @@ pub enum TextPromptAction {
     MoveToSuggestionPageUp,
     /// When a suggestion list exists, moves the cursor to the page below.
     MoveToSuggestionPageDown,
-    /// When a suggestion list exists, autocompletes the text input with the current suggestion.
+    /// When a suggestion list exists, autocompletes using the standard key (Tab).
     UseCurrentSuggestion,
+    /// Requests contextual help for the current field (Ctrl+H).
+    ShowHelp,
 }
 
 impl InnerAction for TextPromptAction {
@@ -39,6 +41,7 @@ impl InnerAction for TextPromptAction {
             Key::PageDown(_) => Self::MoveToSuggestionPageDown,
 
             Key::Tab => Self::UseCurrentSuggestion,
+            Key::Char('h' | 'H', KeyModifiers::CONTROL) => Self::ShowHelp,
 
             key => match InputAction::from_key(key, &()) {
                 Some(action) => Self::ValueInput(action),
@@ -47,5 +50,19 @@ impl InnerAction for TextPromptAction {
         };
 
         Some(action)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::{TextConfig, TextPromptAction};
+    use crate::prompts::action::InnerAction;
+    use crate::ui::Key;
+
+    #[test]
+    fn ctrl_h_maps_to_help_suggestion_action() {
+        let cfg = TextConfig { page_size: 7 };
+        let action = TextPromptAction::from_key(Key::Char('h', crate::ui::KeyModifiers::CONTROL), &cfg);
+        assert_eq!(action, Some(TextPromptAction::ShowHelp));
     }
 }
