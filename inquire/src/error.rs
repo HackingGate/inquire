@@ -35,6 +35,9 @@ pub enum InquireError {
     /// The user requested contextual help via the configured help hotkey.
     OperationHelp,
 
+    /// The user requested to review unsaved changes via Ctrl+U.
+    OperationUnsaved,
+
     /// Error while executing IO operations.
     Custom(CustomUserError),
 }
@@ -89,6 +92,9 @@ impl fmt::Display for InquireError {
             }
             InquireError::OperationHelp => {
                 f.write_str("Operation help was requested by the user")
+            }
+            InquireError::OperationUnsaved => {
+                f.write_str("Unsaved changes review was requested by the user")
             }
             InquireError::Custom(err) => write!(f, "User-provided error: {}", err),
         }

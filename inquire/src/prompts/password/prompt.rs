@@ -206,7 +206,6 @@ where
                 self.active_input_mut().handle(input_action).into()
             }
             PasswordPromptAction::ToggleDisplayMode => self.toggle_display_mode(),
-            PasswordPromptAction::ShowHelp => return Err(InquireError::OperationHelp),
         };
 
         Ok(result)

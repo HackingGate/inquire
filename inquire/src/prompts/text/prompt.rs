@@ -226,7 +226,6 @@ where
 
                 result
             }
-            TextPromptAction::ShowHelp => return Err(InquireError::OperationHelp),
         };
 
         Ok(result)

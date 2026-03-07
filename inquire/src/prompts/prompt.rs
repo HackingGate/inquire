@@ -151,6 +151,8 @@ where
                         ActionResult::NeedsRedraw
                     }
                     Action::Interrupt => return Err(InquireError::OperationInterrupted),
+                    Action::Help => return Err(InquireError::OperationHelp),
+                    Action::Unsaved => return Err(InquireError::OperationUnsaved),
                     Action::Inner(inner_action) => self.handle(inner_action)?,
                 };
             }

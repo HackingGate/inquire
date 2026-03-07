@@ -12,8 +12,6 @@ pub enum PasswordPromptAction {
     ValueInput(InputAction),
     /// Toggles the display mode between plain text and the initial one.
     ToggleDisplayMode,
-    /// Requests contextual help for the current password field (Ctrl+H).
-    ShowHelp,
 }
 
 impl InnerAction for PasswordPromptAction {
@@ -25,11 +23,6 @@ impl InnerAction for PasswordPromptAction {
                 if m.contains(KeyModifiers::CONTROL) && config.enable_display_toggle =>
             {
                 Self::ToggleDisplayMode
-            }
-            Key::Char('h' | 'H', m)
-                if m.contains(KeyModifiers::CONTROL) && config.enable_display_toggle =>
-            {
-                Self::ShowHelp
             }
             key => match InputAction::from_key(key, &()) {
                 Some(action) => Self::ValueInput(action),
@@ -49,7 +42,8 @@ mod test {
     use crate::ui::{Key, KeyModifiers};
 
     #[test]
-    fn ctrl_h_maps_to_show_help_action() {
+    fn ctrl_h_not_handled_by_inner_action() {
+        // Ctrl+H is now handled at the top-level Action enum (Action::Help)
         let cfg = PasswordConfig {
             enable_display_toggle: true,
             display_mode: PasswordDisplayMode::Masked,
@@ -58,7 +52,7 @@ mod test {
             Key::Char('h', KeyModifiers::CONTROL),
             &cfg,
         );
-        assert_eq!(action, Some(PasswordPromptAction::ShowHelp));
+        assert_eq!(action, None);
     }
 
     #[test]

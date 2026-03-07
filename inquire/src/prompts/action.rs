@@ -22,6 +22,10 @@ where
     Cancel,
     /// Interrupts the prompt execution without a graceful shutdown.
     Interrupt,
+    /// Requests contextual help (Ctrl+H).
+    Help,
+    /// Requests unsaved changes review (Ctrl+U).
+    Unsaved,
     /// Specialized actions according to the prompt type.
     Inner(I),
 }
@@ -41,6 +45,8 @@ where
             | Key::Char('j', KeyModifiers::CONTROL) => Some(Action::Submit),
             Key::Escape | Key::Char('g' | 'd', KeyModifiers::CONTROL) => Some(Action::Cancel),
             Key::Char('c', KeyModifiers::CONTROL) => Some(Action::Interrupt),
+            Key::Char('h' | 'H', KeyModifiers::CONTROL) => Some(Action::Help),
+            Key::Char('u' | 'U', KeyModifiers::CONTROL) => Some(Action::Unsaved),
             key => I::from_key(key, config).map(Action::Inner),
         }
     }
@@ -134,6 +140,24 @@ mod test {
                 Key::PageDown(KeyModifiers::NONE)
             ))),
             Action::from_key(Key::PageDown(KeyModifiers::NONE), &())
+        );
+    }
+
+    #[test]
+    fn ctrl_h_results_in_help_action() {
+        let key = Key::Char('h', KeyModifiers::CONTROL);
+        assert_eq!(
+            Some(Action::<MockInnerAction>::Help),
+            Action::from_key(key, &())
+        );
+    }
+
+    #[test]
+    fn ctrl_u_results_in_unsaved_action() {
+        let key = Key::Char('u', KeyModifiers::CONTROL);
+        assert_eq!(
+            Some(Action::<MockInnerAction>::Unsaved),
+            Action::from_key(key, &())
         );
     }
 
