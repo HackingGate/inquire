@@ -24,6 +24,8 @@ where
     Interrupt,
     /// Requests contextual help (Ctrl+H).
     Help,
+    /// Requests list editing (Ctrl+L).
+    List,
     /// Requests unsaved changes review (Ctrl+U).
     Unsaved,
     /// Specialized actions according to the prompt type.
@@ -46,6 +48,7 @@ where
             Key::Escape | Key::Char('g' | 'd', KeyModifiers::CONTROL) => Some(Action::Cancel),
             Key::Char('c', KeyModifiers::CONTROL) => Some(Action::Interrupt),
             Key::Char('h' | 'H', KeyModifiers::CONTROL) => Some(Action::Help),
+            Key::Char('l' | 'L', KeyModifiers::CONTROL) => Some(Action::List),
             Key::Char('u' | 'U', KeyModifiers::CONTROL) => Some(Action::Unsaved),
             key => I::from_key(key, config).map(Action::Inner),
         }
@@ -148,6 +151,15 @@ mod test {
         let key = Key::Char('h', KeyModifiers::CONTROL);
         assert_eq!(
             Some(Action::<MockInnerAction>::Help),
+            Action::from_key(key, &())
+        );
+    }
+
+    #[test]
+    fn ctrl_l_results_in_list_action() {
+        let key = Key::Char('l', KeyModifiers::CONTROL);
+        assert_eq!(
+            Some(Action::<MockInnerAction>::List),
             Action::from_key(key, &())
         );
     }

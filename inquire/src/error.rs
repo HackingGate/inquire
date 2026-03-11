@@ -35,6 +35,9 @@ pub enum InquireError {
     /// The user requested contextual help via the configured help hotkey.
     OperationHelp,
 
+    /// The user requested list editing via Ctrl+L.
+    OperationList,
+
     /// The user requested to review unsaved changes via Ctrl+U.
     OperationUnsaved,
 
@@ -90,9 +93,8 @@ impl fmt::Display for InquireError {
             InquireError::OperationInterrupted => {
                 f.write_str("Operation was interrupted by the user")
             }
-            InquireError::OperationHelp => {
-                f.write_str("Operation help was requested by the user")
-            }
+            InquireError::OperationHelp => f.write_str("Operation help was requested by the user"),
+            InquireError::OperationList => f.write_str("List edit was requested by the user"),
             InquireError::OperationUnsaved => {
                 f.write_str("Unsaved changes review was requested by the user")
             }

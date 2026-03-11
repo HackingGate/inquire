@@ -37,9 +37,9 @@ impl InnerAction for PasswordPromptAction {
 #[cfg(test)]
 mod test {
     use super::{PasswordConfig, PasswordPromptAction};
-    use crate::PasswordDisplayMode;
     use crate::prompts::action::InnerAction;
     use crate::ui::{Key, KeyModifiers};
+    use crate::PasswordDisplayMode;
 
     #[test]
     fn ctrl_h_not_handled_by_inner_action() {
@@ -48,10 +48,7 @@ mod test {
             enable_display_toggle: true,
             display_mode: PasswordDisplayMode::Masked,
         };
-        let action = PasswordPromptAction::from_key(
-            Key::Char('h', KeyModifiers::CONTROL),
-            &cfg,
-        );
+        let action = PasswordPromptAction::from_key(Key::Char('h', KeyModifiers::CONTROL), &cfg);
         assert_eq!(action, None);
     }
 
@@ -61,10 +58,7 @@ mod test {
             enable_display_toggle: true,
             display_mode: PasswordDisplayMode::Masked,
         };
-        let action = PasswordPromptAction::from_key(
-            Key::Char('r', KeyModifiers::CONTROL),
-            &cfg,
-        );
+        let action = PasswordPromptAction::from_key(Key::Char('r', KeyModifiers::CONTROL), &cfg);
         assert_eq!(action, Some(PasswordPromptAction::ToggleDisplayMode));
     }
 }

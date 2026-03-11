@@ -152,6 +152,7 @@ where
                     }
                     Action::Interrupt => return Err(InquireError::OperationInterrupted),
                     Action::Help => return Err(InquireError::OperationHelp),
+                    Action::List => return Err(InquireError::OperationList),
                     Action::Unsaved => return Err(InquireError::OperationUnsaved),
                     Action::Inner(inner_action) => self.handle(inner_action)?,
                 };

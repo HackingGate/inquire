@@ -122,10 +122,11 @@ impl<'a, 'b> TextPrompt<'a, 'b> {
         trigger: CompletionTrigger,
     ) -> InquireResult<ActionResult> {
         let suggestion = self.get_highlighted_suggestion().map(|s| s.to_owned());
-        match self
-            .autocompleter
-            .get_completion_with_trigger(self.input.content(), suggestion, trigger)?
-        {
+        match self.autocompleter.get_completion_with_trigger(
+            self.input.content(),
+            suggestion,
+            trigger,
+        )? {
             Replacement::Some(value) => {
                 self.input = Input::new_with(value);
                 Ok(ActionResult::NeedsRedraw)

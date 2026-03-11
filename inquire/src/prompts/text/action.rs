@@ -60,7 +60,8 @@ mod test {
     fn ctrl_h_not_handled_by_inner_action() {
         // Ctrl+H is now handled at the top-level Action enum (Action::Help)
         let cfg = TextConfig { page_size: 7 };
-        let action = TextPromptAction::from_key(Key::Char('h', crate::ui::KeyModifiers::CONTROL), &cfg);
+        let action =
+            TextPromptAction::from_key(Key::Char('h', crate::ui::KeyModifiers::CONTROL), &cfg);
         assert_eq!(action, None);
     }
 }
