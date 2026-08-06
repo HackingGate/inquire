@@ -41,6 +41,13 @@ pub enum InquireError {
     /// The user requested to review unsaved changes via Ctrl+U.
     OperationUnsaved,
 
+    /// The user requested a display-mode toggle via Ctrl+T.
+    ///
+    /// Like [`InquireError::OperationHelp`], this aborts the prompt so the
+    /// caller can flip whatever display state its options are rendered from
+    /// and reopen the prompt with freshly rendered options.
+    OperationDisplayToggle,
+
     /// Error while executing IO operations.
     Custom(CustomUserError),
 }
@@ -97,6 +104,9 @@ impl fmt::Display for InquireError {
             InquireError::OperationList => f.write_str("List edit was requested by the user"),
             InquireError::OperationUnsaved => {
                 f.write_str("Unsaved changes review was requested by the user")
+            }
+            InquireError::OperationDisplayToggle => {
+                f.write_str("A display-mode toggle was requested by the user")
             }
             InquireError::Custom(err) => write!(f, "User-provided error: {}", err),
         }
