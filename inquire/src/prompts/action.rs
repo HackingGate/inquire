@@ -28,8 +28,8 @@ where
     List,
     /// Requests unsaved changes review (Ctrl+U).
     Unsaved,
-    /// Requests a display-mode toggle (Ctrl+T).
-    DisplayToggle,
+    /// Requests a value-format toggle (Ctrl+T).
+    FormatToggle,
     /// Specialized actions according to the prompt type.
     Inner(I),
 }
@@ -52,7 +52,7 @@ where
             Key::Char('h' | 'H', KeyModifiers::CONTROL) => Some(Action::Help),
             Key::Char('l' | 'L', KeyModifiers::CONTROL) => Some(Action::List),
             Key::Char('u' | 'U', KeyModifiers::CONTROL) => Some(Action::Unsaved),
-            Key::Char('t' | 'T', KeyModifiers::CONTROL) => Some(Action::DisplayToggle),
+            Key::Char('t' | 'T', KeyModifiers::CONTROL) => Some(Action::FormatToggle),
             key => I::from_key(key, config).map(Action::Inner),
         }
     }
@@ -128,20 +128,20 @@ mod test {
     }
 
     #[test]
-    fn ctrl_t_results_in_display_toggle_action() {
+    fn ctrl_t_results_in_format_toggle_action() {
         for key in [
             Key::Char('t', KeyModifiers::CONTROL),
             Key::Char('T', KeyModifiers::CONTROL),
         ] {
             assert_eq!(
-                Some(Action::<MockInnerAction>::DisplayToggle),
+                Some(Action::<MockInnerAction>::FormatToggle),
                 Action::from_key(key, &())
             );
         }
     }
 
     #[test]
-    fn plain_t_is_not_a_display_toggle() {
+    fn plain_t_is_not_a_format_toggle() {
         assert_eq!(
             Some(Action::<MockInnerAction>::Inner(MockInnerAction::Action(
                 Key::Char('t', KeyModifiers::NONE)
