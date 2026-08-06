@@ -154,7 +154,7 @@ where
                     Action::Help => return Err(InquireError::OperationHelp),
                     Action::List => return Err(InquireError::OperationList),
                     Action::Unsaved => return Err(InquireError::OperationUnsaved),
-                    Action::DisplayToggle => return Err(InquireError::OperationDisplayToggle),
+                    Action::FormatToggle => return Err(InquireError::OperationFormatToggle),
                     Action::Inner(inner_action) => self.handle(inner_action)?,
                 };
             }
